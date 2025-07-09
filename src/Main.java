@@ -1,27 +1,30 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main (String[] args) {
         Reader reader = new Reader();
         try {
+            String[] files = {"MLPD","DW", "AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
             List<WordCount> referenz = reader.importFromJson("referenz_export.json");
-
             System.out.println("Loaded referenze");
             List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
-            String[] files = {"AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
             for (String file : files) {
-                List<WordCount> list = reader.countFile("wps/" + file + "/" + file + ".txt", CharacterSetType.UTF8);
-                Reader.addDatabase(referenz, list);
+                List<WordCount> list = reader.importFromJson("wps/" + file + "/" + file + "_export.json");
                 parteiprogramme.add(new PartyProgrammStatistics(file, list));
                 System.out.println("Loaded " + file);
             }
             List<Filter> filters = new ArrayList<>();
-            filters.add(new FilterNotInReference());
+            filters.add(new FilterOnlyInPartyProgramms());
             AnalysisTool analysisTool = new AnalysisTool(filters);
             analysisTool.analyze(parteiprogramme.get(0), parteiprogramme.get(1), "analysen/ersteAnalyse");
             System.out.println("Analyzed 2 party programmes");
@@ -68,6 +71,36 @@ public class Main {
                 writer.write(line);
                 writer.newLine();
             }
+        }
+    }
+
+    public static void generateJsonReferences(String inputFolder, CharacterSetType encoding) throws IOException {
+        Reader reader = new Reader();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try (Stream<Path> paths = Files.walk(Paths.get(inputFolder)
+        )) {
+            paths.filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".txt"))
+                    .forEach(path -> {
+                        try {
+                            System.out.println("Processing: " + path);
+                            List<WordCount> referenz = reader.importFromJson("referenz_export.json");
+                            List<WordCount> wordCounts = reader.countFile(path.toString(), encoding);
+                            Reader.addDatabase(referenz, wordCounts);
+
+                            // Write JSON output
+                            String outputFileName = path.toString().replace(".txt", "_export.json");
+                            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
+                                String json = gson.toJson(wordCounts);
+                                writer.write(json);
+                            }
+
+                            System.out.println("Saved: " + outputFileName);
+                        } catch (IOException e) {
+                            System.err.println("Failed for: " + path + " → " + e.getMessage());
+                        }
+                    });
         }
     }
 }
