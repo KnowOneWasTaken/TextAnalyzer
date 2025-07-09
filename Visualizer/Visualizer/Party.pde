@@ -1,8 +1,8 @@
 class Party {
   String name;
   color col;
-  int x = (int)random(-20,20);
-  int y = (int)random(-20,20);
+  int x = (int)random(-40,40);
+  int y = (int)random(-40,40);
   PVector v = new PVector(0,0);
   double mass;
   color textCol;

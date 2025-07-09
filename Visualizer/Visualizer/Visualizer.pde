@@ -11,13 +11,7 @@ List<Party> parties = new ArrayList<>();
 
 void setup() {
   size(1400,1400);
-  //for (int i = 0; i < distances.length; i++) {
-  //  for (int j = 0; j < distances[0].length; j++) {
-  //     distances[i][j] = random(0,1); 
-  //  }
-  //}
 
-  
   parties.add(new Party("Grüne", mass, color(0,255,0), color(255,0,255)));
   parties.get(0).setPos(0,0);
   parties.add(new Party("CDU", mass, color(0,0,0), color(255,255,255)));
