@@ -14,7 +14,7 @@ public class Main {
             List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
             String[] files = {"AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
             for (String file : files) {
-                List<WordCount> list = reader.countFile("wps/" + file + "/" + file + ".txt", CharacterSetType.WINDOWS);
+                List<WordCount> list = reader.countFile("wps/" + file + "/" + file + ".txt", CharacterSetType.UTF8);
                 Reader.addDatabase(referenz, list);
                 parteiprogramme.add(new PartyProgrammStatistics(file, list));
                 System.out.println("Loaded " + file);
