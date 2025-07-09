@@ -50,6 +50,14 @@ public class WordCount implements Comparable<WordCount> {
         return o instanceof WordCount && word.equals(((WordCount) o).word);
     }
 
+    public void setReferencePercentage(float percentage) {
+        this.referencePercentage = percentage;
+    }
+
+    public float getReferencePercentage() {
+        return referencePercentage;
+    }
+
     @Override
     public int compareTo(WordCount o) {
         if (o instanceof WordCount) {

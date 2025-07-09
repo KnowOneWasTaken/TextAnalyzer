@@ -85,4 +85,23 @@ public class Reader {
         }
         return list;
     }
+
+    public static void addDatabase(List<WordCount> dataBase, List<WordCount> list) {
+        for (WordCount wordCount : list) {
+            if (dataBase.contains(wordCount)) {
+                wordCount.setReferencePercentage(getEntry(wordCount, dataBase).getPercentage());
+            }
+        }
+    }
+    private static WordCount getEntry(WordCount wc, List<WordCount> list) {
+        if (!list.contains(wc)) {
+            return new WordCount(wc.getWord(), wc.getCount());
+        }
+        for (WordCount wc1 : list) {
+            if (wc.equals(wc1)) {
+                return wc1;
+            }
+        }
+        return new WordCount(wc.getWord(), wc.getCount());
+    }
 }

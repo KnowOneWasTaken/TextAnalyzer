@@ -9,42 +9,15 @@ public class Main {
     public static void main (String[] args) {
         Reader reader = new Reader();
         try {
-            List<WordCount> afd = reader.countFile("afd.txt", CharacterSetType.WINDOWS);
-            System.out.println("Finished first file");
-            List<WordCount> green = reader.countFile("green.txt", CharacterSetType.WINDOWS);
-            System.out.println("Finished second file");
-            List<WordCount> cdu = reader.countFile("cdu.txt", CharacterSetType.WINDOWS);
-            System.out.println("Finished third file");
-            List<WordCount> fdp = reader.countFile("fdp.txt", CharacterSetType.WINDOWS);
-            System.out.println("Finished forth file");
             List<WordCount> referenz = reader.countFile("referenz.txt", CharacterSetType.UTF8);
-            System.out.println("Finished counting");
-            System.out.println();
-            /*analysiereHaeufigerAlsNormalAuftretendeWoerter(referenz, green, "green-analyse.txt");
-            analysiereHaeufigerAlsNormalAuftretendeWoerter(referenz, cdu, "cdu-analyse.txt");
-            analysiereHaeufigerAlsNormalAuftretendeWoerter(referenz, afd, "afd-analyse.txt");
-            analysiereHaeufigerAlsNormalAuftretendeWoerter(referenz, fdp, "fdp-analyse.txt");
+            List<List> parteiprogramme = new ArrayList<>();
+            String[] files = {"afd.txt", "green.txt", "cdu.txt", "fdp.txt"};
+            for (String file : files) {
+                parteiprogramme.add(reader.countFile(file, CharacterSetType.WINDOWS));
+                Reader.addDatabase(referenz, parteiprogramme.get(parteiprogramme.size() - 1));
+            }
+            saveList(parteiprogramme.get(0), "first.txt");
 
-            analysiereNichtInReferenzWoerter(referenz, green, "green-not-in-reference.txt");
-            analysiereNichtInReferenzWoerter(referenz, cdu, "cdu-not-in-reference.txt");
-            analysiereNichtInReferenzWoerter(referenz, afd, "afd-not-in-reference.txt");
-            analysiereNichtInReferenzWoerter(referenz, fdp, "fdp-not-in-reference.txt");
-
-            analysiereLowRankReferenzHighCount(referenz, green, "green-LowRankReferenzHighCount.txt");
-            analysiereLowRankReferenzHighCount(referenz, cdu, "cdu-LowRankReferenzHighCount.txt");
-            analysiereLowRankReferenzHighCount(referenz, afd, "afd-LowRankReferenzHighCount.txt");
-            analysiereLowRankReferenzHighCount(referenz, fdp, "fdp-LowRankReferenzHighCount.txt");
-
-            saveList(green, "green-statistics");
-            saveList(cdu, "cdu-statistics");
-            saveList(afd, "afd-statistics");
-            saveList(fdp, "fdp-statistics");
-            */
-
-            rareWords(referenz, green, "green-rareWords.txt");
-            rareWords(referenz, cdu, "cdu-rareWords.txt");
-            rareWords(referenz, afd, "afd-rareWords.txt");
-            rareWords(referenz, fdp, "fdp-rareWords.txt");
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
