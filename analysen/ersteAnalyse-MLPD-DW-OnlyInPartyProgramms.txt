@@ -1,0 +1,2 @@
+Filter-Beschreibung: This Filter filters out every word other than these, that are in both party programms but not in the reference database 
+gesinnungsparagrafen: 1; 0.0125%; Rang: 51; Referenz: 0.0%
