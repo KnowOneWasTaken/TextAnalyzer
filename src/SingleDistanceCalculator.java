@@ -46,3 +46,20 @@ public final class SingleDistanceCalculator {
         double distance = Math.abs(value);
        return distance / percentile;
 }
+    private static double calculateDistanceVariant2(WordCount wordCount1, WordCount wordCount2, int wordCountTotal1, int wordCountTotal2) {
+        if (wordCount2 != null&&wordCount1!=null) {
+            return calculateDifferenceToNormal(((double)wordCount1.getCount())/ wordCountTotal1, wordCount1.getPercentage()) - calculateDifferenceToNormal(((double)wordCount2.getCount())/ wordCountTotal2, wordCount2.getPercentage());
+            } else if (wordCount1!= null) {
+            return calculateDifferenceToNormal(((double)wordCount1.getCount())/ wordCountTotal1, wordCount1.getPercentage());
+            } else if (wordCount2!= null) {
+            return calculateDifferenceToNormal(((double)wordCount2.getCount())/ wordCountTotal2, wordCount2.getPercentage());
+            }
+        return 0;
+    }
+    private static double calculateDifferenceToNormal(double valuePercentile, double percentile) {
+        if (valuePercentile > percentile) {
+            return valuePercentile/ percentile -1;
+        }
+        return -1* percentile/ valuePercentile +1;
+    }
+}

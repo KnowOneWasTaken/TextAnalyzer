@@ -26,9 +26,13 @@ public class Main {
             List<Filter> filters = new ArrayList<>();
             filters.add(new FilterOnlyInPartyProgramms());
             AnalysisTool analysisTool = new AnalysisTool(filters);
-            analysisTool.analyze(parteiprogramme.get(0), parteiprogramme.get(1), "analysen/ersteAnalyse");
-            System.out.println("Analyzed 2 party programmes");
-
+            double[][] distanceMatrix = new double[parteiprogramme.size()][parteiprogramme.size()];
+            for (int i = 0; i<parteiprogramme.size(); i++) {
+                for (int j = i+1; j<parteiprogramme.size(); j++) {
+                    distanceMatrix[i][j] = analysisTool.analyze(parteiprogramme.get(i), parteiprogramme.get(j), "Analyse Vergleich"+parteiprogramme.get(i).getName()+" & "+ parteiprogramme.get(j).getName());
+                    distanceMatrix[j][i] = distanceMatrix[i][j];
+                }
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
