@@ -32,14 +32,17 @@ public final class SingleDistanceCalculator {
     private static double calculateDistanceVariant1(WordCount wordCount1, WordCount wordCount2, int wordCountTotal1, int wordCountTotal2) {
         if (wordCount2 != null&&wordCount1!=null) {
             double databasePercentile = wordCount1.getReferencePercentage();
-            return (wordCount1.getCount()* wordCountTotal2 - wordCount2.getCount()* wordCountTotal1)* databasePercentile/ (wordCountTotal1*wordCountTotal2);
+            return calculateDistanceDifference(((double) wordCount1.getCount()* wordCountTotal2 - wordCount2.getCount()* wordCountTotal1)/ (wordCountTotal1*wordCountTotal2), databasePercentile);
         } else if (wordCount1!= null) {
             double databasePercentile = wordCount1.getReferencePercentage();
-            return wordCount1.getCount() * databasePercentile / wordCountTotal1;
+            return calculateDistanceDifference((double) wordCount1.getCount() / wordCountTotal1,  databasePercentile);
         } else if (wordCount2!= null) {
             double databasePercentile = wordCount2.getReferencePercentage();
-            return wordCount2.getCount() * databasePercentile / wordCountTotal2;
+            return calculateDistanceDifference((double) wordCount2.getCount() / wordCountTotal2,  databasePercentile);
         }
         return 0;
     }
+    private static double calculateDistanceDifference(double value, double percentile) {
+        double distance = Math.abs(value);
+       return distance / percentile;
 }
