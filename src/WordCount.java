@@ -20,11 +20,11 @@ public class WordCount implements Comparable<WordCount> {
         return word;
     }
 
-    public void setPercentage(float p) {
+    public void setPercentage(double p) {
         this.percentage = p;
     }
 
-    public float getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
@@ -50,11 +50,11 @@ public class WordCount implements Comparable<WordCount> {
         return o instanceof WordCount && word.equals(((WordCount) o).word);
     }
 
-    public void setReferencePercentage(float percentage) {
+    public void setReferencePercentage(double percentage) {
         this.referencePercentage = percentage;
     }
 
-    public float getReferencePercentage() {
+    public double getReferencePercentage() {
         return referencePercentage;
     }
 

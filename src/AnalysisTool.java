@@ -12,8 +12,7 @@ public class AnalysisTool {
     public void analyze(PartyProgrammStatistics party1, PartyProgrammStatistics party2, String file) {
         for (Filter filter : filter) {
             try {
-                writeLinesToFile(filter.filter(party1), file + "-" + party1.getName() + "-" + filter.getName() + ".txt", "Filter-Beschreibung: " + filter.getDescription());
-                writeLinesToFile(filter.filter(party2), file + "-" + party2.getName() + "-" + filter.getName() + ".txt", "Filter-Beschreibung: " + filter.getDescription());
+                writeLinesToFile(filter.filter(party1, party2), file + "-" + party1.getName() + "-" + party2.getName() + "-" + filter.getName() + ".txt", "Filter-Beschreibung: " + filter.getDescription());
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -27,12 +26,12 @@ public class AnalysisTool {
      * @param filename Name der Zieldatei (inkl. Pfad, falls nötig)
      * @throws IOException Falls ein Fehler beim Schreiben auftritt
      */
-    private static void writeLinesToFile (List<String> lines, String filename, String message) throws IOException {
+    private static void writeLinesToFile (List<WordCount> lines, String filename, String message) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(message);
             writer.newLine();
-            for (String line : lines) {
-                writer.write(line);
+            for (WordCount wordCount : lines) {
+                writer.write(wordCount.toString());
                 writer.newLine();
             }
         }

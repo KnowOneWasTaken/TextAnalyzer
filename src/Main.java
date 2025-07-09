@@ -12,13 +12,18 @@ public class Main {
             List<WordCount> referenz = reader.countFile("referenz.txt", CharacterSetType.UTF8);
             System.out.println("Loaded referenze");
             List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
-            String[] files = {"AFD", "green", "CDU-CSU", "FDP", "BSW"};
+            String[] files = {"AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
             for (String file : files) {
                 List<WordCount> list = reader.countFile("wps/" + file + ".txt", CharacterSetType.WINDOWS);
                 Reader.addDatabase(referenz, list);
                 parteiprogramme.add(new PartyProgrammStatistics(file, list));
                 System.out.println("Loaded " + file);
             }
+            List<Filter> filters = new ArrayList<>();
+            filters.add(new FilterNotInReference());
+            AnalysisTool analysisTool = new AnalysisTool(filters);
+            analysisTool.analyze(parteiprogramme.get(0), parteiprogramme.get(1), "analysen/ersteAnalyse");
+            System.out.println("Analyzed 2 party programmes");
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -28,7 +33,7 @@ public class Main {
         boolean found = false;
         for (WordCount wc : wordCounts) {
             if (wc.equals(new WordCount(word, 0))) {
-                System.out.println(wc.getWord() + ": " + wc.getCount() + "; " + wc.percentage());
+                System.out.println(wc.getWord() + ": " + wc.getCount() + "; " + wc.percentage(wc.getPercentage()));
                 found = true;
             }
         }
@@ -63,88 +68,5 @@ public class Main {
                 writer.newLine();
             }
         }
-    }
-
-    private static void analysiereHaeufigerAlsNormalAuftretendeWoerter(List<WordCount> referenz, List<WordCount> list, String fileName) throws IOException {
-        System.out.println("Creating " + fileName);
-        List<CompareCount> modifiedList = new ArrayList<>();
-        for (WordCount wordCount : list) {
-            WordCount reference = getEntry(wordCount, referenz);
-            float multiplyer = (wordCount.getPercentage()/reference.getPercentage());
-            if (multiplyer < 2 || wordCount.getCount() < 4 || !referenz.contains(wordCount) || reference.getCount() < 2) {
-                continue;
-            }
-            modifiedList.add(new CompareCount(wordCount, multiplyer));
-        }
-        System.out.println("Created modified List");
-        modifiedList = modifiedList.stream().sorted().collect(Collectors.toList());
-        System.out.println("Sorted modified list");
-        String[] lines = new String[modifiedList.size()];
-        int i = 0;
-        for (CompareCount wordCount : modifiedList) {
-            WordCount reference = getEntry(wordCount, referenz);
-            lines[i] = (wordCount + " | "+ reference.getCount() + ": " + reference.percentage() + " | mutiplyer: "+wordCount.getMultiplier());
-            i++;
-        }
-        writeLinesToFile(lines, fileName);
-        System.out.println(fileName + " saved");
-    }
-
-    private static void analysiereNichtInReferenzWoerter(List<WordCount> referenz, List<WordCount> list, String fileName) throws IOException {
-        System.out.println("Creating " + fileName);
-        List<WordCount> modifiedList = new ArrayList<>();
-        for (WordCount wordCount : list) {
-            if (!referenz.contains(wordCount)) {
-                modifiedList.add(wordCount);
-            }
-        }
-        modifiedList = modifiedList.stream().sorted().collect(Collectors.toList());
-        String[] lines = new String[modifiedList.size()];
-        for (int i = 0; i < modifiedList.size(); i++) {
-            lines[i] = modifiedList.get(i).toString();
-        }
-        writeLinesToFile(lines, fileName);
-        System.out.println(fileName + " saved");
-    }
-
-    private static void analysiereLowRankReferenzHighCount(List<WordCount> referenz, List<WordCount> list, String fileName) throws IOException {
-        System.out.println("Creating " + fileName);
-        List<CompareCount> modifiedList = new ArrayList<>();
-        for (WordCount wordCount : list) {
-            modifiedList.add(new CompareCount(wordCount, (float) Math.pow(getEntry(wordCount, referenz).getRank(), 1) / (wordCount.getRank()+1)));
-        }
-        modifiedList = modifiedList.stream().sorted().collect(Collectors.toList()).subList(0,30);
-        String[] lines = new String[modifiedList.size()];
-        for (int i = 0; i < modifiedList.size(); i++) {
-            lines[i] = modifiedList.get(i).toString();
-        }
-        writeLinesToFile(lines, fileName);
-        System.out.println(fileName + " saved");
-    }
-
-    private static void saveList(List<WordCount> list, String fileName) throws IOException {
-        String[] lines = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            lines[i] = list.get(i).toString();
-        }
-        writeLinesToFile(lines, fileName);
-
-    }
-
-    private static void rareWords(List<WordCount> referenz, List<WordCount> list, String fileName) throws IOException {
-        System.out.println("Creating " + fileName);
-        List<WordCount> modifiedList = new ArrayList<>();
-        for (WordCount wordCount : list) {
-            if (referenz.contains(wordCount) && getEntry(wordCount, referenz).getCount() < 10000) {
-                modifiedList.add(wordCount);
-            }
-        }
-        modifiedList = modifiedList.stream().sorted().collect(Collectors.toList());
-        String[] lines = new String[modifiedList.size()];
-        for (int i = 0; i < modifiedList.size(); i++) {
-            lines[i] = modifiedList.get(i).toString();
-        }
-        writeLinesToFile(lines, fileName);
-        System.out.println(fileName + " saved");
     }
 }
