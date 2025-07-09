@@ -3,9 +3,9 @@ import java.util.Objects;
 public class WordCount implements Comparable<WordCount> {
     private final String word;
     private int count;
-    private float percentage = 0;
+    private double percentage = 0;
     private int rank = 0;
-    private float referencePercentage;
+    private double referencePercentage = 0;
 
     public WordCount(String word, int count) {
         this.word = word;
@@ -28,7 +28,7 @@ public class WordCount implements Comparable<WordCount> {
         return percentage;
     }
 
-    public String percentage() {
+    public String percentage(double percentage) {
         return Math.round(percentage*1000000)/10000f + "%";
     }
 
@@ -42,7 +42,7 @@ public class WordCount implements Comparable<WordCount> {
 
     @Override
     public String toString() {
-        return getWord() + ": " + getCount() + "; " + percentage();
+        return getWord() + ": " + getCount() + "; " + percentage(percentage) + "; Rang: " + rank + "; Referenz: " + percentage(referencePercentage);
     }
 
     @Override

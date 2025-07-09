@@ -10,14 +10,17 @@ public class Main {
         Reader reader = new Reader();
         try {
             List<WordCount> referenz = reader.countFile("referenz.txt", CharacterSetType.UTF8);
+            System.out.println("Loaded referenze");
             List<List> parteiprogramme = new ArrayList<>();
             String[] files = {"afd.txt", "green.txt", "cdu.txt", "fdp.txt"};
             for (String file : files) {
-                parteiprogramme.add(reader.countFile(file, CharacterSetType.WINDOWS));
+                parteiprogramme.add(reader.countFile("wps/" + file, CharacterSetType.WINDOWS));
                 Reader.addDatabase(referenz, parteiprogramme.get(parteiprogramme.size() - 1));
+                System.out.println("Loaded " + file);
             }
-            saveList(parteiprogramme.get(0), "first.txt");
 
+            saveList(parteiprogramme.get(0), "first.txt");
+            System.out.println("Saved first file");
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
