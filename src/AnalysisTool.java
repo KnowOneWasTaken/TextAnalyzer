@@ -9,7 +9,7 @@ public class AnalysisTool {
         this.filter = filter;
     }
 
-    public void analyze(PartyProgrammStatistics party1, PartyProgrammStatistics party2, String file) {
+    public double analyze(PartyProgrammStatistics party1, PartyProgrammStatistics party2, String file) {
         for (Filter filter : filter) {
             try {
                 writeLinesToFile(filter.filter(party1, party2), file + "-" + party1.getName() + "-" + party2.getName() + "-" + filter.getName() + ".txt", "Filter-Beschreibung: " + filter.getDescription());
@@ -17,6 +17,7 @@ public class AnalysisTool {
                 System.out.println(e.getMessage());
             }
         }
+        return TotalDistanceCalculator.calculateDistance(SingleDistanceCalculator.calculateSingleDistance(party1, party2));
     }
 
     /**

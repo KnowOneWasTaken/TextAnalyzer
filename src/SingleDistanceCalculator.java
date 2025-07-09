@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public final class SingleDistanceCalculator {
     private SingleDistanceCalculator() {}
-    public static List<Double> getSingleDistance(PartyProgrammStatistics partyProgrammStatistics1, PartyProgrammStatistics partyProgrammStatistics2) {
+    public static List<Double> calculateSingleDistance(PartyProgrammStatistics partyProgrammStatistics1, PartyProgrammStatistics partyProgrammStatistics2) {
         List<Double> distanceList = new ArrayList<>();
         Map<String, WordCount> wordMap2 = new HashMap<>();
         for (WordCount wordCount2: partyProgrammStatistics1.getList()) {
