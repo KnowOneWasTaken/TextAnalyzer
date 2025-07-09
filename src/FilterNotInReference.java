@@ -20,14 +20,18 @@ public class FilterNotInReference implements Filter {
         for (WordCount wordCount : party1.getList()) {
             if (wordCount.getReferencePercentage() == 0) {
                 filtered.add(wordCount);
-                party1.getList().remove(wordCount);
             }
+        }
+        for (WordCount wordCount : filtered) {
+            party1.getList().remove(wordCount);
         }
         for (WordCount wordCount : party2.getList()) {
             if (wordCount.getReferencePercentage() == 0) {
                 filtered.add(wordCount);
-                party2.getList().remove(wordCount);
             }
+        }
+        for (WordCount wordCount : filtered) {
+            party1.getList().remove(wordCount);
         }
         return filtered;
     }
