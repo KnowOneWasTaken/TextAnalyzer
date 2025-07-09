@@ -11,16 +11,14 @@ public class Main {
         try {
             List<WordCount> referenz = reader.countFile("referenz.txt", CharacterSetType.UTF8);
             System.out.println("Loaded referenze");
-            List<List> parteiprogramme = new ArrayList<>();
-            String[] files = {"afd.txt", "green.txt", "cdu.txt", "fdp.txt"};
+            List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
+            String[] files = {"AFD", "green", "CDU-CSU", "FDP", "BSW"};
             for (String file : files) {
-                parteiprogramme.add(reader.countFile("wps/" + file, CharacterSetType.WINDOWS));
-                Reader.addDatabase(referenz, parteiprogramme.get(parteiprogramme.size() - 1));
+                List<WordCount> list = reader.countFile("wps/" + file + ".txt", CharacterSetType.WINDOWS);
+                Reader.addDatabase(referenz, list);
+                parteiprogramme.add(new PartyProgrammStatistics(file, list));
                 System.out.println("Loaded " + file);
             }
-
-            saveList(parteiprogramme.get(0), "first.txt");
-            System.out.println("Saved first file");
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
