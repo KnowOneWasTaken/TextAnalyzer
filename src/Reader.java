@@ -7,6 +7,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.text.Normalizer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 
 
 public class Reader {
@@ -33,23 +37,23 @@ public class Reader {
         bufferedReader.close();
         line = builder.toString().trim();
         line = Normalizer.normalize(line, Normalizer.Form.NFC);
-            line = line.trim().replaceAll("â€ž", "").replaceAll("â€œ", "").replaceAll("- (?!und)", "").
-                    replaceAll("\\*innen", "").replaceAll("\\d+", "").replaceAll("[A-Z]\\.", "").toLowerCase();
-            String[] words = pattern.split(line);
-            int count = 0;
-            for (String word : words) {
-                if (word.trim().isEmpty()) {
-                    continue;
-                }
-                //System.out.print(word + "|");
-                //if (count % 10 == 0) System.out.println();
-                if (map.containsKey(word)) {
-                    map.put(word, map.get(word) + 1);
-                } else {
-                    map.put(word, 1);
-                }
-                count++;
+        line = line.trim().replaceAll("â€ž", "").replaceAll("â€œ", "").replaceAll("- (?!und)", "").
+                replaceAll("\\*innen", "").replaceAll("\\d+", "").replaceAll("[A-Z]\\.", "").toLowerCase();
+        String[] words = pattern.split(line);
+        int count = 0;
+        for (String word : words) {
+            if (word.trim().isEmpty()) {
+                continue;
             }
+            //System.out.print(word + "|");
+            //if (count % 10 == 0) System.out.println();
+            if (map.containsKey(word)) {
+                map.put(word, map.get(word) + 1);
+            } else {
+                map.put(word, 1);
+            }
+            count++;
+        }
         return map;
     }
 
@@ -103,5 +107,16 @@ public class Reader {
             }
         }
         return new WordCount(wc.getWord(), wc.getCount());
+    }
+
+    public List<WordCount> importFromJson(String filePath) throws IOException {
+        Gson gson = new Gson();
+        FileReader reader = new FileReader(filePath);
+
+        Type listType = new TypeToken<List<WordCount>>() {}.getType();
+        List<WordCount> referenceList = gson.fromJson(reader, listType);
+
+        reader.close();
+        return referenceList;
     }
 }

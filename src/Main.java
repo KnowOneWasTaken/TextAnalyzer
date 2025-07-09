@@ -9,7 +9,8 @@ public class Main {
     public static void main (String[] args) {
         Reader reader = new Reader();
         try {
-            List<WordCount> referenz = reader.countFile("referenz.txt", CharacterSetType.UTF8);
+            List<WordCount> referenz = reader.importFromJson("referenz_export.json");
+
             System.out.println("Loaded referenze");
             List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
             String[] files = {"AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
