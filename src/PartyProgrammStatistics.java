@@ -8,6 +8,7 @@ public class PartyProgrammStatistics {
     public PartyProgrammStatistics(String name, List<WordCount> list) {
         this.name = name;
         this.list = list;
+        calculateNumberOfWords();
     }
 
     public String getName() {
@@ -18,11 +19,19 @@ public class PartyProgrammStatistics {
         return list;
     }
 
-    public void setNumberOfWords (int numberOfWords) {
-        this.numberOfWords = numberOfWords;
+    public void setNumberOfWords () {
+        calculateNumberOfWords();
     }
 
     public int getNumberOfWords () {
         return numberOfWords;
+    }
+
+    private void calculateNumberOfWords() {
+        int count = 0;
+        for (WordCount wc : list) {
+            count += wc.getCount();
+        }
+        numberOfWords = count;
     }
 }

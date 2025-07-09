@@ -1,0 +1,1 @@
+Filter-Beschreibung: This Filter filters out every word other than these, that are in both party programms but not in the reference database 

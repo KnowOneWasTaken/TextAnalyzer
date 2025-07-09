@@ -1,11 +1,12 @@
 class Party {
   String name;
   color col;
-  int x = (int)random(-40,40);
-  int y = (int)random(-40,40);
+  int x = (int)random(-100,100);
+  int y = (int)random(-100,100);
   PVector v = new PVector(0,0);
   double mass;
   color textCol;
+  int size = 80;
   
   public Party(String name, double mass, color col, color textCol) {
     this.name = name;
@@ -34,11 +35,17 @@ class Party {
   void show(int dx, int dy) {
      stroke(255);
      fill(col);
-     circle(dx + x, dy + y, 80);
+     circle(dx + x/scale, dy + y/scale, size);
      fill(textCol);
      textSize(30);
      textAlign(CENTER);
-     text(name, dx + x, dy + y + 10, 50);
+     text(name, dx + x/scale, dy + y/scale + 10, 50);
+  }
+  
+  boolean isMouseIn(int dx, int dy) {
+    boolean inX = dx + x/scale - size < mouseX && dx + x/scale + size > mouseX;
+    boolean inY = dy + y/scale - size < mouseY && dy + y/scale + size > mouseY;
+    return inX && inY;
   }
   
   PVector getPos() {

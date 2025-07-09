@@ -1,0 +1,1 @@
+Filter-Beschreibung: This Filter filters out every word that is common in the reference

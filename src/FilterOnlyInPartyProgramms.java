@@ -32,6 +32,8 @@ public class FilterOnlyInPartyProgramms implements Filter {
                 party2.getList().remove(party2.getList().get(i));
             }
         }
+        party1.setNumberOfWords();
+        party2.setNumberOfWords();
         return filtered;
     }
 }

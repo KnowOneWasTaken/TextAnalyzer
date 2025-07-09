@@ -15,7 +15,7 @@ public class Main {
         Reader reader = new Reader();
         try {
             String[] files = {"MLPD","DW", "AFD", "GRUENE", "CDU-CSU", "FDP", "BSW", "LINKE", "SPD"};
-            List<WordCount> referenz = reader.importFromJson("referenz_export.json");
+            //List<WordCount> referenz = reader.importFromJson("referenz_export.json");
             System.out.println("Loaded referenze");
             List<PartyProgrammStatistics> parteiprogramme = new ArrayList<>();
             for (String file : files) {
@@ -23,18 +23,38 @@ public class Main {
                 parteiprogramme.add(new PartyProgrammStatistics(file, list));
                 System.out.println("Loaded " + file);
             }
+
+            String[] words = {"kommunistisch", "freiheit", "demokratisch", "demokratie", "deutschland", "volk", "zukunft", "grün"};
+            for (String word : words) {
+                System.out.println("Search for word '"+word+"'");
+                AnalysisTool.findWord(parteiprogramme, word);
+                System.out.println();
+            }
+
             List<Filter> filters = new ArrayList<>();
             filters.add(new FilterOnlyInPartyProgramms());
+            //filters.add(new FilterCommonWords());
             AnalysisTool analysisTool = new AnalysisTool(filters);
             double[][] distanceMatrix = new double[parteiprogramme.size()][parteiprogramme.size()];
             for (int i = 0; i<parteiprogramme.size(); i++) {
                 for (int j = i+1; j<parteiprogramme.size(); j++) {
-                    distanceMatrix[i][j] = analysisTool.analyze(parteiprogramme.get(i), parteiprogramme.get(j), "Analyse Vergleich"+parteiprogramme.get(i).getName()+" & "+ parteiprogramme.get(j).getName());
+                    distanceMatrix[i][j] = analysisTool.analyze(parteiprogramme.get(i), parteiprogramme.get(j), "analysen/Analyse Vergleich"+parteiprogramme.get(i).getName()+" & "+ parteiprogramme.get(j).getName());
                     distanceMatrix[j][i] = distanceMatrix[i][j];
                 }
             }
+            for (int i = 0; i < distanceMatrix.length; i++) {
+                System.out.print("{");
+                for (int j = 0; j < distanceMatrix[i].length; j++) {
+                    System.out.print(distanceMatrix[i][j]/20000d);
+                    if (j + 1 < distanceMatrix.length) {
+                        System.out.print(",");
+                    }
+                }
+                System.out.println("},");
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
     private static void findWord(String word, List<WordCount> wordCounts, int countOfWords) {

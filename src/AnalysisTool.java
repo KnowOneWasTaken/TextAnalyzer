@@ -1,7 +1,9 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnalysisTool {
     private final List<Filter> filter;
@@ -17,7 +19,13 @@ public class AnalysisTool {
                 System.out.println(e.getMessage());
             }
         }
-        return TotalDistanceCalculator.calculateDistance(SingleDistanceCalculator.calculateSingleDistance(party1, party2));
+        List<Double> distances = SingleDistanceCalculator.calculateSingleDistance(party1, party2);
+        for(int i = 0; i < distances.size(); i++) {
+            if (distances.get(i) > 200000000) {
+                distances.set(i, Double.valueOf(200000000));
+            }
+        }
+        return TotalDistanceCalculator.calculateDistance(distances);
     }
 
     /**
@@ -35,6 +43,26 @@ public class AnalysisTool {
                 writer.write(wordCount.toString());
                 writer.newLine();
             }
+        }
+    }
+
+    public static void findWord(List<PartyProgrammStatistics> parties, String word) {
+        WordCount wordCount = new WordCount(word,0);
+        List<WordCount> wordCounts = new ArrayList<>();
+        for (PartyProgrammStatistics party : parties) {
+            if (party.getList().contains(wordCount)) {
+                WordCount listElement = party.getList().get(party.getList().indexOf(wordCount));
+                listElement.setParty(party.getName());
+                wordCounts.add(listElement);
+            } else {
+                WordCount wc = new WordCount(word, 0);
+                wc.setParty(party.getName());
+                wordCounts.add(wc);
+            }
+        }
+        wordCounts = wordCounts.stream().sorted().collect(Collectors.toList());
+        for (WordCount wc : wordCounts) {
+            System.out.println("Party: " + wc.getParty() + "; " + wc);
         }
     }
 }

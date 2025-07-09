@@ -6,6 +6,7 @@ public class WordCount implements Comparable<WordCount> {
     private double percentage = 0;
     private int rank = 0;
     private double referencePercentage = 0;
+    String party;
 
     public WordCount(String word, int count) {
         this.word = word;
@@ -58,10 +59,18 @@ public class WordCount implements Comparable<WordCount> {
         return referencePercentage;
     }
 
+    public String getParty() {
+        return party;
+    }
+
+    public void setParty(String party) {
+        this.party = party;
+    }
+
     @Override
     public int compareTo(WordCount o) {
         if (o instanceof WordCount) {
-            if (o.getCount() < getCount()) {
+            if (o.getPercentage() < getPercentage()) {
                 return -1;
             } else if (o.getCount() > getCount()) {
                 return 1;

@@ -33,6 +33,8 @@ public class FilterNotInReference implements Filter {
         for (WordCount wordCount : filtered) {
             party1.getList().remove(wordCount);
         }
+        party1.setNumberOfWords();
+        party2.setNumberOfWords();
         return filtered;
     }
 }
