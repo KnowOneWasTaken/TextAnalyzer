@@ -36,6 +36,10 @@ public class Main {
             //filters.add(new FilterCommonWords());
             AnalysisTool analysisTool = new AnalysisTool(filters);
             double[][] distanceMatrix = new double[parteiprogramme.size()][parteiprogramme.size()];
+            for (PartyProgrammStatistics parteiprogramm: parteiprogramme) {
+                analysisTool.topFilter(parteiprogramm,50, 3,"Analyse "+parteiprogramm.getName());
+
+            }
             for (int i = 0; i<parteiprogramme.size(); i++) {
                 for (int j = i+1; j<parteiprogramme.size(); j++) {
                     distanceMatrix[i][j] = analysisTool.analyze(parteiprogramme.get(i), parteiprogramme.get(j), "analysen/Analyse Vergleich"+parteiprogramme.get(i).getName()+" & "+ parteiprogramme.get(j).getName());

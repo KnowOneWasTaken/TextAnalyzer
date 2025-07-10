@@ -11,6 +11,16 @@ public class AnalysisTool {
         this.filter = filter;
     }
 
+    public void topFilter(PartyProgrammStatistics party1, int numberOfTopDeviations, int numberFilter, String file) {
+        TopFilter topFilter= new TopFilter(numberOfTopDeviations, numberFilter);
+        try {
+            writeLinesToFileDeviation(topFilter.filter(party1),file  +" "+topFilter.getName()+ ".txt", "Filter-Beschreibung: " +topFilter.getDescription() );
+
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     public double analyze(PartyProgrammStatistics party1, PartyProgrammStatistics party2, String file) {
         for (Filter filter : filter) {
             try {
@@ -41,6 +51,23 @@ public class AnalysisTool {
             writer.newLine();
             for (WordCount wordCount : lines) {
                 writer.write(wordCount.toString());
+                writer.newLine();
+            }
+        }
+    }
+    /**
+     * Schreibt die gegebenen Strings zeilenweise in die angegebene Datei.
+     *
+     * @param lines Array von Strings, die in die Datei geschrieben werden sollen
+     * @param filename Name der Zieldatei (inkl. Pfad, falls nötig)
+     * @throws IOException Falls ein Fehler beim Schreiben auftritt
+     */
+    private static void writeLinesToFileDeviation (List<DeviationContainer> lines, String filename, String message) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(message);
+            writer.newLine();
+            for (DeviationContainer container : lines) {
+                writer.write("Word "+container.getWord()+" deviation: " + container.getDeviation() + " count: " + container.getWordCount());
                 writer.newLine();
             }
         }
