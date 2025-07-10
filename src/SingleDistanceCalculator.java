@@ -43,7 +43,7 @@ public final class SingleDistanceCalculator {
         return 0;
     }
     private static double calculateDistanceDifference(double value, double percentile) {
-        double distance = Math.abs(value);
+        double distance = Math.abs(value)*100;
        return distance* distance / percentile;
 }
     private static double calculateDistanceVariant2(WordCount wordCount1, WordCount wordCount2, int wordCountTotal1, int wordCountTotal2) {
