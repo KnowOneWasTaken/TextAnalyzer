@@ -5,7 +5,7 @@ public final class TotalDistanceCalculator {
     public static double calculateDistance(List<Double> distanceList) {
         double totalDistance = 0;
         for (Double distance: distanceList) {
-            totalDistance += distance*distance;
+            totalDistance += distance;
         }
         totalDistance /= distanceList.size();
         return Math.sqrt(totalDistance);
