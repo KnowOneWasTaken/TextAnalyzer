@@ -21,7 +21,7 @@ double bestTotalForce = 2000000000;
 int frames = 0;
 int frameCountPerRound = 1500;
 int round = 0;
-int rounds = 100;
+int rounds = 20;
 boolean play = true;
 int centerParty = 4;
 

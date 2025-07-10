@@ -1,13 +1,14 @@
 class Party {
   String name;
   color col;
+  PVector v = new PVector(0, 0, 0);
   int x = (int)random(-100, 100);
   int y = (int)random(-100, 100);
   int z = (int)random(-100, 100);
-  PVector v = new PVector(0, 0, 0);
   double mass;
   color textCol;
-  int size = 80;
+  int size = 40;
+
 
   public Party(String name, double mass, color col, color textCol) {
     this.name = name;
@@ -16,11 +17,13 @@ class Party {
     this.textCol = textCol;
   }
 
+
   public void applyForce(PVector force) {
     v.x += force.x / mass;
     v.y += force.y / mass;
     v.z += force.z / mass;
   }
+
 
   public void move() {
     x += v.x;
@@ -29,6 +32,8 @@ class Party {
     v.x = v.x*0.9;
     v.y = v.y*0.9;
     v.z = v.z*0.9;
+    v.x = v.x*0.99;
+    v.y = v.y*0.99;
   }
 
   public void setPos(int x, int y, int z) {
@@ -44,12 +49,12 @@ class Party {
     noStroke();
     lights();
     translate(dx + x/scale, dy + y/scale, dz + z/scale);
-    sphere(size);
-    translate(-dx - x/scale, -dy - y/scale, -dz - z/scale);
-    fill(textCol);
+     sphere(size);
+      translate(-dx - x/scale, -dy - y/scale, -dz - z/scale);
+    fill(255);
     textSize(30);
     textAlign(CENTER);
-    text(name, dx + x/scale, dy + y/scale + 10, 50);
+    text(name, dx + x/scale, dy + y/scale+30, dz + z/scale+size*1.5, 50);
   }
 
   boolean isMouseIn(int dx, int dy) {
@@ -58,9 +63,11 @@ class Party {
     return inX && inY;
   }
 
+
   PVector getPos() {
-    return new PVector(x, y);
+    return new PVector(x, y, z);
   }
+
 
   PVector getVectorBetween(PVector other) {
     return new PVector(other.x - x, other.y - y, other.z - z);

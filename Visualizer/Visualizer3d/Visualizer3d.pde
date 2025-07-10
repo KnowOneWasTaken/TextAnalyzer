@@ -11,7 +11,7 @@ double[][] distances = {
   {3.619524426987866, 36.93082416779364, 27.03479662789076, 12.08989740234257, 20.895024514802063, 27.870198385882862, 26.806315007150655, 0.0, 0.30487596347619617},
   {11.473335637620577, 42.6505048031075, 26.857234509268864, 17.824081883932966, 29.8411569059644, 33.26891842659323, 24.933135053404925, 0.30487596347619617, 0.0}
 };
-double mass = 100;
+double mass = 1000000;
 int defaultDistance = 50;
 float increasePower = 1;
 float scale = 2;
@@ -19,24 +19,28 @@ List<Party> parties = new ArrayList<>();
 List<PVector> minForce = new ArrayList<>();
 double bestTotalForce = 2000000000;
 int frames = 0;
-int frameCountPerRound = 800;
+int frameCountPerRound = 2000;
 int round = 0;
-int rounds = 100;
+int rounds = 20;
 boolean play = true;
+int centerParty = 4;
+float rotateAngleX = PI/2;
+float rotateAngleY = 0;
+float rotateAngleZ = 0;
 
 void setup() {
-  size(1400, 1400, P3D);
+  size(1920, 1400, P3D);
   //increaseDifferences(1);
   parties.add(new Party("MLPD", mass, color(220, 10, 10), color(0, 255, 255)));
   parties.add(new Party("III Weg", mass, color(255, 255, 255), color(0, 0, 0)));
   parties.add(new Party("AfD", mass, color(0, 40, 240), color(255, 255, 0)));
   parties.add(new Party("Grüne", mass, color(0, 255, 0), color(255, 0, 255)));
-  parties.add(new Party("CDU", mass, color(0, 0, 0), color(255, 255, 255)));
+  parties.add(new Party("CDU", mass, color(40), color(255, 255, 255)));
   parties.add(new Party("FDP", mass, color(255, 255, 0), color(0, 0, 255)));
   parties.add(new Party("BSW", mass, color(180, 0, 180), color(0, 255, 0)));
   parties.add(new Party("Linke", mass, color(255, 0, 255), color(0, 255, 0)));
   parties.add(new Party("SPD", mass, color(255, 0, 0), color(0, 255, 255)));
-  parties.get(0).setPos(0, 0, 0);
+  parties.get(centerParty).setPos(0, 0, 0);
   /*
   
    
@@ -45,32 +49,37 @@ void setup() {
 }
 
 void draw() {
-  for (int  k = 0; k < 60; k++) {
-    background(15);
+  for (int  k = 0; k < 1; k++) {
+    background(0);
     double totalForce = 0;
-    for (int i = 1; i < distances.length; i++) {
+    for (int i = 0; i < distances.length; i++) {
+      if (i == centerParty) {
+        //continue;
+      }
       for (int j = 0; j < distances.length; j++) {
         if (i!=j) {
+          float range = 2;
           PVector vectorDistance = parties.get(i).getVectorBetween(parties.get(j).getPos());
           float distance = absolute(vectorDistance);
-          if (distance <= 0.0001) {
-            vectorDistance = new PVector(0.1, 0.1);
+          while (distance < 1) {
+            parties.get(i).setPos((int)random(-range, range) + (int)parties.get(i).getPos().x, (int)random(-range, range) + (int)parties.get(i).getPos().y,
+              (int)random(-range, range) + (int)parties.get(i).getPos().z);
+            vectorDistance = parties.get(i).getVectorBetween(parties.get(j).getPos());
             distance = absolute(vectorDistance);
           }
-          float distanceReference = (float)(distances[i][j] * defaultDistance);
-          PVector force = new PVector((float)(vectorDistance.x * (distance-distanceReference))/(absolute(vectorDistance)) * 0.01, (float)(vectorDistance.y * (distance-distanceReference))/(absolute(vectorDistance)) * 0.01,
-          (float)(vectorDistance.z * (distance-distanceReference))/(absolute(vectorDistance)) * 0.01);
+          float distanceReference = (float)(distances[i][j])*defaultDistance;
+          PVector force = new PVector((float)(vectorDistance.x * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)),
+            (float)(vectorDistance.y * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)),
+            (float)(vectorDistance.z * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)));
+          if (play) {
+            totalForce+= absolute(force);
+          }
           parties.get(i).applyForce(force);
         }
       }
-      PVector force = parties.get(i).getVectorBetween(new PVector(0, 0, 0));
-      totalForce += absolute(force);
-      if (play) {
-        parties.get(i).applyForce(new PVector(force.x*0.001, force.y*0.001, force.z*0.01));
-      }
     }
 
-    if (totalForce < bestTotalForce) {
+    if (totalForce < bestTotalForce && frames % frameCountPerRound > 10) {
       bestTotalForce = totalForce;
       minForce = new ArrayList<>();
       for (Party party : parties) {
@@ -82,16 +91,26 @@ void draw() {
       if (play) {
         party.move();
       }
-      party.show(700, 700, 0);
+      translate(width/2-(int)(parties.get(centerParty).getPos().x/scale), height/2-(int)(parties.get(centerParty).getPos().y/scale), (int)(parties.get(centerParty).getPos().z/scale));
+      rotateX(rotateAngleX);
+      rotateY(rotateAngleY);
+      rotateZ(rotateAngleZ);
+      party.show(0, 0, 0);
+      rotateX(-rotateAngleX);
+      rotateY(-rotateAngleY);
+      rotateZ(-rotateAngleZ);
+      translate(-(width/2-(int)(parties.get(centerParty).getPos().x/scale)), -(height/2-(int)(parties.get(centerParty).getPos().y/scale)), -((int)(parties.get(centerParty).getPos().z/scale)));
     }
     if (frames % frameCountPerRound == 0) {
       round++;
-      int range = 10;
+      int range = 20;
       if (round < rounds) {
         for (int i = 0; i < parties.size(); i++) {
           parties.get(i).setPos((int)random(-range, range), (int)random(-range, range), (int)random(-range, range));
+          parties.get(centerParty).setPos(0, 0, 0);
         }
       } else if (round == rounds) {
+        play = false;
         for (int i = 0; i < parties.size(); i++) {
           parties.get(i).setPos((int)minForce.get(i).x, (int)minForce.get(i).y, (int)minForce.get(i).z);
         }
@@ -110,7 +129,7 @@ void draw() {
 }
 
 float absolute(PVector vector) {
-  return sqrt(sq(vector.x) + sq(vector.y) + sq(vector.z));
+  return sqrt(sq(vector.x) + sq(vector.y));
 }
 
 public void increaseDifferences(float power) {
@@ -149,23 +168,35 @@ public void increaseDifferences(float power) {
 }
 
 void keyPressed() {
-  if (key == 'w') {
-    increasePower += 1;
-    println(increasePower);
+  if (key == '2') {
+    scale *=1.1;
+    println(scale);
   }
-  if (key == 's') {
-    increasePower -= 1;
-    println(increasePower);
+  if (key == '1') {
+    scale *= 0.9;
+    println(scale);
   }
   if (key == ' ') {
     play = !play;
+  }
+  if (key == 'a') {
+    rotateAngleX += 0.02;
+    println("rotate");
+  }
+  if (key == 's') {
+    rotateAngleY += 0.02;
+    println("rotate");
+  }
+  if (key == 'd') {
+    rotateAngleZ += 0.02;
+    println("rotate");
   }
 }
 
 void mouseDragged() {
   for (Party party : parties) {
     if (party.isMouseIn(width/2, height/2)) {
-      party.setPos((int)(mouseX*scale-width/2*scale), (int)(mouseY*scale-height/2*scale), (int)party.getPos().z);
+      party.setPos((int)(mouseX*scale-width/2*scale), (int)(mouseY*scale-height/2*scale), 0);
     }
   }
 }
