@@ -29,11 +29,9 @@ class Party {
     x += v.x;
     y += v.y;
     z += v.z;
-    v.x = v.x*0.9;
-    v.y = v.y*0.9;
-    v.z = v.z*0.9;
-    v.x = v.x*0.99;
-    v.y = v.y*0.99;
+    v.x = v.x*0.94;
+    v.y = v.y*0.94;
+    v.z = v.z*0.94;
   }
 
   public void setPos(int x, int y, int z) {
@@ -54,7 +52,7 @@ class Party {
     fill(255);
     textSize(30);
     textAlign(CENTER);
-    text(name, dx + x/scale, dy + y/scale+30, dz + z/scale+size*1.5, 50);
+    text(name, dx + x/scale, dy + y/scale+30, dz + z/scale-size*1.5, 50);
   }
 
   boolean isMouseIn(int dx, int dy) {

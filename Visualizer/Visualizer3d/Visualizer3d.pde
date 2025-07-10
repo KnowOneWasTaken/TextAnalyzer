@@ -1,15 +1,15 @@
 import java.util.List;
 
 double[][] distances = {
-  {0.0, 19.432544397614794, 19.070796805575707, 18.344747016477683, 19.852314455915067, 1.5499554341799515, 3.6834983840605484, 3.619524426987866, 11.473335637620577},
-  {19.432544397614794, 0.0, 21.291638730324763, 20.302112237448572, 20.977431910593605, 25.69096133963491, 29.86275867723236, 36.93082416779364, 42.6505048031075},
-  {19.070796805575707, 21.291638730324763, 0.0, 23.417802432999217, 22.241117865509448, 25.440841966126534, 24.642720101852515, 27.03479662789076, 26.857234509268864},
-  {18.344747016477683, 20.302112237448572, 23.417802432999217, 0.0, 21.548402294608724, 18.898360189787812, 18.904902777945125, 12.08989740234257, 17.824081883932966},
-  {19.852314455915067, 20.977431910593605, 22.241117865509448, 21.548402294608724, 0.0, 23.25147429399139, 18.073374728572087, 20.895024514802063, 29.8411569059644},
-  {1.5499554341799515, 25.69096133963491, 25.440841966126534, 18.898360189787812, 23.25147429399139, 0.0, 22.645574325457964, 27.870198385882862, 33.26891842659323},
-  {3.6834983840605484, 29.86275867723236, 24.642720101852515, 18.904902777945125, 18.073374728572087, 22.645574325457964, 0.0, 26.806315007150655, 24.933135053404925},
-  {3.619524426987866, 36.93082416779364, 27.03479662789076, 12.08989740234257, 20.895024514802063, 27.870198385882862, 26.806315007150655, 0.0, 0.30487596347619617},
-  {11.473335637620577, 42.6505048031075, 26.857234509268864, 17.824081883932966, 29.8411569059644, 33.26891842659323, 24.933135053404925, 0.30487596347619617, 0.0}
+{0.0,9.875521390743424,14.917201645109861,16.187107271995423,12.227957953424765,12.309469075027048,11.511859756599769,14.35348483754216,11.619927220609037},
+{9.875521390743424,0.0,14.88306570150483,16.155657537357467,12.186293216914459,12.268082393323134,11.467595697613518,14.318014276253693,11.554459211722774},
+{14.917201645109861,14.88306570150483,0.0,19.63419457579351,16.50763515843383,16.583187063418684,16.00006415931824,18.124620825718115,16.046864206351263},
+{16.187107271995423,16.155657537357467,19.63419457579351,0.0,17.635233661456784,17.64940692968503,17.146475115434782,19.09191725508192,17.161032582972624},
+{12.227957953424765,12.186293216914459,16.50763515843383,17.635233661456784,0.0,14.12451422767169,13.509333989282288,16.015675791960437,13.601533481236816},
+{12.309469075027048,12.268082393323134,16.583187063418684,17.64940692968503,14.12451422767169,0.0,13.583155808551496,16.046866803228742,13.656567164668656},
+{11.511859756599769,11.467595697613518,16.00006415931824,17.146475115434782,13.509333989282288,13.583155808551496,0.0,15.44350296504661,12.980827174300815},
+{14.35348483754216,14.318014276253693,18.124620825718115,19.09191725508192,16.015675791960437,16.046866803228742,15.44350296504661,0.0,15.52422543413097},
+{11.619927220609037,11.554459211722774,16.046864206351263,17.161032582972624,13.601533481236816,13.656567164668656,12.980827174300815,15.52422543413097,0.0}
 };
 double mass = 1000000;
 int defaultDistance = 50;
@@ -19,27 +19,27 @@ List<Party> parties = new ArrayList<>();
 List<PVector> minForce = new ArrayList<>();
 double bestTotalForce = 2000000000;
 int frames = 0;
-int frameCountPerRound = 2000;
+int frameCountPerRound = 15000;
 int round = 0;
 int rounds = 20;
 boolean play = true;
 int centerParty = 4;
-float rotateAngleX = PI/2;
+float rotateAngleX = 0;
 float rotateAngleY = 0;
 float rotateAngleZ = 0;
 
 void setup() {
   size(1920, 1400, P3D);
   //increaseDifferences(1);
-  parties.add(new Party("MLPD", mass, color(220, 10, 10), color(0, 255, 255)));
+  parties.add(new Party("MLPD", mass, color(#ED0008), color(0, 255, 255)));
   parties.add(new Party("III Weg", mass, color(255, 255, 255), color(0, 0, 0)));
-  parties.add(new Party("AfD", mass, color(0, 40, 240), color(255, 255, 0)));
-  parties.add(new Party("Grüne", mass, color(0, 255, 0), color(255, 0, 255)));
+  parties.add(new Party("AfD", mass, color(#0489DB), color(255, 255, 0)));
+  parties.add(new Party("Grüne", mass, color(#1AA037), color(255, 0, 255)));
   parties.add(new Party("CDU", mass, color(40), color(255, 255, 255)));
-  parties.add(new Party("FDP", mass, color(255, 255, 0), color(0, 0, 255)));
+  parties.add(new Party("FDP", mass, color(#FFEF00), color(0, 0, 255)));
   parties.add(new Party("BSW", mass, color(180, 0, 180), color(0, 255, 0)));
-  parties.add(new Party("Linke", mass, color(255, 0, 255), color(0, 255, 0)));
-  parties.add(new Party("SPD", mass, color(255, 0, 0), color(0, 255, 255)));
+  parties.add(new Party("Linke", mass, color(233, 0, 153), color(0, 255, 0)));
+  parties.add(new Party("SPD", mass, color(#E3000F), color(0, 255, 255)));
   parties.get(centerParty).setPos(0, 0, 0);
   /*
   
@@ -62,15 +62,13 @@ void draw() {
           PVector vectorDistance = parties.get(i).getVectorBetween(parties.get(j).getPos());
           float distance = absolute(vectorDistance);
           while (distance < 1) {
-            parties.get(i).setPos((int)random(-range, range) + (int)parties.get(i).getPos().x, (int)random(-range, range) + (int)parties.get(i).getPos().y,
-              (int)random(-range, range) + (int)parties.get(i).getPos().z);
+            parties.get(i).setPos((int)random(-range, range) + (int)parties.get(i).getPos().x, (int)random(-range, range) + (int)parties.get(i).getPos().y, (int)random(-range, range) + (int)parties.get(i).getPos().z);
             vectorDistance = parties.get(i).getVectorBetween(parties.get(j).getPos());
             distance = absolute(vectorDistance);
           }
           float distanceReference = (float)(distances[i][j])*defaultDistance;
-          PVector force = new PVector((float)(vectorDistance.x * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)),
-            (float)(vectorDistance.y * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)),
-            (float)(vectorDistance.z * pow((distance-distanceReference), 1)/abs((distance-distanceReference)))/(absolute(vectorDistance)));
+          PVector force = new PVector((float)(vectorDistance.x * pow((distance-distanceReference), 3)/abs((distance-distanceReference)))/(absolute(vectorDistance)),
+            (float)(vectorDistance.y * pow((distance-distanceReference), 3)/abs((distance-distanceReference)))/(absolute(vectorDistance)));
           if (play) {
             totalForce+= absolute(force);
           }
@@ -79,7 +77,7 @@ void draw() {
       }
     }
 
-    if (totalForce < bestTotalForce && frames % frameCountPerRound > 10) {
+    if (totalForce < bestTotalForce) {
       bestTotalForce = totalForce;
       minForce = new ArrayList<>();
       for (Party party : parties) {
@@ -103,7 +101,7 @@ void draw() {
     }
     if (frames % frameCountPerRound == 0) {
       round++;
-      int range = 20;
+      int range = 100;
       if (round < rounds) {
         for (int i = 0; i < parties.size(); i++) {
           parties.get(i).setPos((int)random(-range, range), (int)random(-range, range), (int)random(-range, range));
@@ -124,6 +122,35 @@ void draw() {
     text("Round: " + round, 40, 50+30*2);
     if (play) {
       frames++;
+    }
+  }
+  if (keyPressed) {
+    if (key == '2') {
+      scale *=1.1;
+      println(scale);
+    }
+    if (key == '1') {
+      scale *= 0.9;
+      println(scale);
+    }
+    if (key == ' ') {
+      play = !play;
+    }
+    if (key == 'a') {
+      rotateAngleY += 0.02;
+      println("rotate");
+    }
+    if (key == 's') {
+      rotateAngleX -= 0.02;
+      println("rotate");
+    }
+    if (key == 'w') {
+      rotateAngleX += 0.02;
+      println("rotate");
+    }
+    if (key == 'd') {
+      rotateAngleY -= 0.02;
+      println("rotate");
     }
   }
 }
@@ -164,32 +191,6 @@ public void increaseDifferences(float power) {
     for (int j = 0; j < distances[i].length; j++) {
       print(distances[i][j]+", ");
     }
-  }
-}
-
-void keyPressed() {
-  if (key == '2') {
-    scale *=1.1;
-    println(scale);
-  }
-  if (key == '1') {
-    scale *= 0.9;
-    println(scale);
-  }
-  if (key == ' ') {
-    play = !play;
-  }
-  if (key == 'a') {
-    rotateAngleX += 0.02;
-    println("rotate");
-  }
-  if (key == 's') {
-    rotateAngleY += 0.02;
-    println("rotate");
-  }
-  if (key == 'd') {
-    rotateAngleZ += 0.02;
-    println("rotate");
   }
 }
 

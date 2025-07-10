@@ -21,15 +21,15 @@ public class Main {
             for (String file : files) {
                 List<WordCount> list = reader.importFromJson("wps/" + file + "/" + file + "_export.json");
                 parteiprogramme.add(new PartyProgrammStatistics(file, list));
-                System.out.println("Loaded " + file);
+                System.out.println(parteiprogramme.get(parteiprogramme.size()-1).getName() + ": "+parteiprogramme.get(parteiprogramme.size()-1).getList().size());
             }
 
-            String[] words = {"kommunistisch", "freiheit", "demokratisch", "demokratie", "deutschland", "volk", "zukunft", "grün"};
+            /*String[] words = {"kommunistisch", "freiheit", "demokratisch", "demokratie", "deutschland", "volk", "zukunft", "grün"};
             for (String word : words) {
                 System.out.println("Search for word '"+word+"'");
                 AnalysisTool.findWord(parteiprogramme, word);
                 System.out.println();
-            }
+            }*/
 
             List<Filter> filters = new ArrayList<>();
             filters.add(new FilterOnlyInPartyProgramms());

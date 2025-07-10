@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import java.io.File;
 
 public class AnalysisTool {
     private final List<Filter> filter;
@@ -14,8 +18,7 @@ public class AnalysisTool {
     public void topFilter(PartyProgrammStatistics party1, int numberOfTopDeviations, int numberFilter, String file) {
         TopFilter topFilter= new TopFilter(numberOfTopDeviations, numberFilter);
         try {
-            writeLinesToFileDeviation(topFilter.filter(party1),file  +" "+topFilter.getName()+ ".txt", "Filter-Beschreibung: " +topFilter.getDescription() );
-
+            writeDeviationListToJsonFile(topFilter.filter(party1),file  +" "+topFilter.getName()+ ".json");
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -54,6 +57,7 @@ public class AnalysisTool {
                 writer.newLine();
             }
         }
+
     }
     /**
      * Schreibt die gegebenen Strings zeilenweise in die angegebene Datei.
@@ -91,5 +95,23 @@ public class AnalysisTool {
         for (WordCount wc : wordCounts) {
             System.out.println("Party: " + wc.getParty() + "; " + wc);
         }
+    }
+
+    public static void writeDeviationListToJsonFile(List<DeviationContainer> list, String filePath) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        // Konvertiere in flaches Exportformat
+        List<DeviationExport> exportList = new ArrayList<>();
+        for (DeviationContainer dc : list) {
+            exportList.add(new DeviationExport(
+                    dc.getDeviation(),
+                    dc.getWord(),
+                    dc.getWordCount()
+            ));
+        }
+
+        // Schreibe als JSON-Array
+        mapper.writeValue(new File(filePath), exportList);
     }
 }
