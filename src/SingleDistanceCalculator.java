@@ -11,7 +11,7 @@ public final class SingleDistanceCalculator {
     public static List<Double> calculateSingleDistance(PartyProgrammStatistics partyProgrammStatistics1, PartyProgrammStatistics partyProgrammStatistics2) {
         List<Double> distanceList = new ArrayList<>();
         Map<String, WordCount> wordMap2 = new HashMap<>();
-        for (WordCount wordCount2: partyProgrammStatistics1.getList()) {
+        for (WordCount wordCount2: partyProgrammStatistics2.getList()) {
             wordMap2.put(wordCount2.getWord(), wordCount2);
         }
         for (WordCount wordCount1 : partyProgrammStatistics1.getList()) {
