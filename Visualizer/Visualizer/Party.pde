@@ -23,8 +23,8 @@ class Party {
   public void move() {
     x += v.x;
     y += v.y;
-    v.x = v.x*0.9;
-    v.y = v.y*0.9;
+    v.x = v.x*0.99;
+    v.y = v.y*0.99;
   }
   
   public void setPos(int x, int y) {
